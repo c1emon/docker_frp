@@ -47,7 +47,7 @@ build_image() {
 
 
 build() {
-    # get_frp
+    get_frp
     gen_dockerfile
     build_image
 }
