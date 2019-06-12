@@ -17,24 +17,23 @@ get_frp() {
 
 gen_dockerfile() {
     if [ ${TARGET} == "amd64" -o ${TARGET} == "386" ]; then
-        sed -i '1c FROM alpine:latest' ${DOCKERFILE}
+        sed -r -i "s/^FROM\s+\w*\/?alpine:latest$/FROM alpine:latest/g" ${DOCKERFILE}
         echo "target x86 or x86_64."
     elif [ ${TARGET} == "arm" -o ${TARGET} == "arm64" ]; then
-        sed -i '1c FROM arm32v6/alpine:latest' ${DOCKERFILE}
+        sed -r -i "s/^FROM\s+\w*\/?alpine:latest$/FROM arm32v6\/alpine:latest/g" ${DOCKERFILE}
         echo "target arm or arm64."
     else
         echo "unknown taget!"
     fi
 
-    sed -i "6c ENV VERSION ${VERSION}" ${DOCKERFILE}
-    sed -i "7c ENV PLATFORM ${TARGET}" ${DOCKERFILE}
-
+    sed -r -i "s/^ENV VERSION\s+[0-9].[0-9][0-9].[0-9]$/ENV VERSION ${VERSION}/g" ${DOCKERFILE}
+    sed -r -i "s/^ENV PLATFORM\s+\w+$/ENV PLATFORM ${TARGET}/g" ${DOCKERFILE}
     
     if [ ${USAGE} == "client" ]; then
-        sed -i '27c CMD ["./frpc","-c","/conf/frpc.ini"]' ${DOCKERFILE}
+        sed -r -i "s/^CMD \[\".\/frp[c,s]\",\"-[c,s]\",\"\/conf\/frp[c,s].ini\"\]$/CMD [\".\/frpc\",\"-c\",\"\/conf\/frpc.ini\"]/g" ${DOCKERFILE}
         echo "build as client."
     else
-        sed -i '27c CMD ["./frps","-c","/conf/frps.ini"]' ${DOCKERFILE}
+        sed -r -i "s/^CMD \[\".\/frp[c,s]\",\"-[c,s]\",\"\/conf\/frp[c,s].ini\"\]$/CMD [\".\/frps\",\"-c\",\"\/conf\/frps.ini\"]/g" ${DOCKERFILE}
         echo "build as server."
     fi
 }
