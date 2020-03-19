@@ -19,6 +19,11 @@ VERSION and TARGET should match frp.
 ---
 You can run this by run `./build.sh build`
 ---
+```
+USAGE:
+docker run -d --restart always -v /dir/of/frp[s,c].ini:/frp/conf --name frp-client frp-client-amd64:0.32.0
+```
+---
 
 ## WARNING!
 You should not edit Dockerfile.
