@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --update tzdata && RUN rm -rf /var/cache/apk/*
+RUN apk add --update tzdata && rm -rf /var/cache/apk/*
 ENV TZ=Asia/Shanghai
 
 ENV VERSION 0.32.0
