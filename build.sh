@@ -38,11 +38,11 @@ gen_dockerfile() {
     sed -r -i "s/^ENV PLATFORM\s+\w+$/ENV PLATFORM ${TARGET}/g" ${DOCKERFILE}
     
     if [ ${USAGE} == "client" ]; then
-        sed -r -i "s/^CMD \[\"\/frp\/frp[c,s]\",\"-c\",\"\/frp\/conf\/frp[c,s].ini\"\]$/CMD [\"\/frp\/frpc\",\"-c\",\"\/frp\/conf\/frpc.ini\"]/g" ${DOCKERFILE}
+        sed -r -i "s/^(CMD) \[\"\/frp\/frp[c,s]\",\"-c\",\"\/frp\/conf\/frp[c,s].ini\"\]/CMD \[\"\/frp\/frpc\",\"-c\",\"\/frp\/conf\/frpc.ini\"\]/g" ${DOCKERFILE}
         sed -r -i "s/^\s+\&\&\s+cp\s+frp\/frp[c,s]\s+\/frp/    \&\& cp frp\/frpc \/frp/g" ${DOCKERFILE}
         echo "TYPE: client"
     else
-        sed -r -i "s/^CMD \[\"\/frp\/frp[c,s]\",\"c,\",\"\/frp\/conf\/frp[c,s].ini\"\]$/CMD [\"\/frp\/frps\",\"-c\",\"\/frp\/conf\/frps.ini\"]/g" ${DOCKERFILE}
+        sed -r -i "s/^(CMD) \[\"\/frp\/frp[c,s]\",\"-c\",\"\/frp\/conf\/frp[c,s].ini\"\]/CMD \[\"\/frp\/frps\",\"-c\",\"\/frp\/conf\/frps.ini\"\]/g" ${DOCKERFILE}
         sed -r -i "s/^\s+\&\&\s+cp\s+frp\/frp[c,s]\s+\/frp/    \&\& cp frp\/frps \/frp/g" ${DOCKERFILE}
         echo "TYPE: server"
     fi
@@ -61,7 +61,7 @@ build_image() {
 build() {
     get_frp
     gen_dockerfile
-    build_image
+    # build_image
 }
 
 "$@"
