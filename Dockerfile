@@ -1,27 +1,23 @@
 FROM alpine:latest
 
-RUN apk add --update tzdata
+RUN apk add --update tzdata && RUN rm -rf /var/cache/apk/*
 ENV TZ=Asia/Shanghai
 
-ENV VERSION 0.27.0
+ENV VERSION 0.32.0
 ENV PLATFORM amd64
 
 WORKDIR /home/root/
 
 COPY frp.tar.gz .
 
-RUN mkdir frp && \
-    tar -zvxf frp.tar.gz \
-    && rm -rf frp_${VERSION}_linux_${PLATFORM}/system* \
-    && cp frp_${VERSION}_linux_${PLATFORM}/* ./frp \
-    && rm -rf frp_${VERSION}_linux_*
+RUN mkdir -p /frp/conf \
+    && tar -zvxf frp.tar.gz \
+    && mv frp_${VERSION}_linux_${PLATFORM} frp \
+    && cp frp/frpc /frp \
+    && rm -rf ./frp*
 
-# Clean APK cache
-RUN rm -rf /var/cache/apk/*
+VOLUME /frp/conf
 
-RUN mkdir /conf
-VOLUME /conf
+WORKDIR /frp
 
-WORKDIR /home/root/frp/
-
-CMD ["./frpc","-c","/conf/frpc.ini"]
+CMD ["/frp/frpc","-c","/frp/conf/frpc.ini"]
