@@ -61,7 +61,7 @@ build_image() {
 build() {
     get_frp
     gen_dockerfile
-    # build_image
+    build_image
 }
 
 "$@"
