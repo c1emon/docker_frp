@@ -1,27 +1,20 @@
-FROM alpine:latest
+FROM amd64/alpine
 
-RUN apk add --update tzdata
-ENV TZ=Asia/Shanghai
+RUN apk add --update tzdata && rm -rf /var/cache/apk/*
+ENV TZ Asia/Shanghai
 
-ENV VERSION 0.27.0
-ENV PLATFORM amd64
+ENV VERSION 0.32.0
 
-WORKDIR /home/root/
+WORKDIR /frp
+COPY start.sh /frp/
 
-COPY frp.tar.gz .
+RUN wget https://github.com/fatedier/frp/releases/download/v${VERSION}/frp_${VERSION}_linux_amd64.tar.gz -O frp.tar.gz \
+    && tar -zvxf frp.tar.gz \
+    && cp frp_${VERSION}_linux_amd64/frps /frp \
+    && cp frp_${VERSION}_linux_amd64/frpc /frp \
+    && rm -rf frp_${VERSION}_linux_* && rm -rf frp.tar.gz \
+    && mkdir /frp/conf
 
-RUN mkdir frp && \
-    tar -zvxf frp.tar.gz \
-    && rm -rf frp_${VERSION}_linux_${PLATFORM}/system* \
-    && cp frp_${VERSION}_linux_${PLATFORM}/* ./frp \
-    && rm -rf frp_${VERSION}_linux_*
+VOLUME /frp/conf
 
-# Clean APK cache
-RUN rm -rf /var/cache/apk/*
-
-RUN mkdir /conf
-VOLUME /conf
-
-WORKDIR /home/root/frp/
-
-CMD ["./frpc","-c","/conf/frpc.ini"]
+CMD ["/frp/start.sh"]

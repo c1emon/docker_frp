@@ -1,27 +1,22 @@
 # docker_frp
 
-## You can use this to auto generate a docker image of frp server or client with platform of x86 or arm.
+## You can use this to auto generate a docker image of frp server or client.
 
 ---
 
-edite config in build.sh:
-
+## 1. Set
+In `Dockerfile` , you can set var VERSION to select frp version.
+e.g 
 ```
-USAGE=client
-VERSION=0.27.0
-TARGET=amd64
-DOCKERFILE=Dockerfile
+VERSION=0.32.0
 ```
-USAGE can be client or server.
-
-VERSION and TARGET should match frp.
+You can check the release of frp on github to get # version.
 
 
----
-You can run this by run `./build.sh build`
----
+## 2. Run
+Set the correct path to conf files in `start_frp.sh`, also those ports. Then just run.
 
-## WARNING! 
-Because of the sed commond change Dockerfile by line, so you should not edit Dockerfile.
+## P.S.
+You can also change different kinds of platforms by just changing the word `amd64` to some others that is avaliable.
 
 
